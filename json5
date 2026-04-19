@@ -1,0 +1,58 @@
+{
+  // 网关配置
+  gateway: {
+    port: 18789,
+    host: "0.0.0.0",
+    dashboardPassword: "${DASHBOARD_PASS}",
+    cors: { enabled: true, origins: ["*"] }
+  },
+  
+  // 多模型配置
+  models: {
+    default: "claude",
+    providers: {
+      claude: {
+        apiKey: "${ANTHROPIC_API_KEY}",
+        model: "claude-sonnet-4-20250514",
+        maxTokens: 4096
+      },
+      openai: {
+        apiKey: "${OPENAI_API_KEY}",
+        model: "gpt-4o",
+        baseUrl: "https://api.openai.com/v1"
+      },
+      ollama: {
+        baseUrl: "http://localhost:11434",
+        model: "llama3.1"
+      }
+    },
+    routing: {
+      rules: [
+        { when: { channel: "telegram" }, use: "openai" },
+        { when: { contains: "代码" }, use: "claude" }
+      ],
+      fallback: "claude"
+    }
+  },
+  
+  // 多渠道配置
+  channels: {
+    telegram: {
+      enabled: true,
+      token: "${TELEGRAM_BOT_TOKEN}",
+      allowedUsers: [12345678],
+      groupPolicy: "allowlist"
+    },
+    discord: {
+      enabled: true,
+      token: "${DISCORD_BOT_TOKEN}",
+      allowedChannels: ["ai-chat", "general"]
+    }
+  },
+  
+  // 技能管理
+  skills: {
+    directory: "./skills",
+    enabled: ["weather", "calculator", "web_search"]
+  }
+}
