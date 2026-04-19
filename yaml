@@ -1,0 +1,20 @@
+# environments/
+# ├── development.yaml
+# ├── staging.yaml
+# └── production.yaml
+
+development:
+  models:
+    default: "ollama"
+    providers:
+      ollama:
+        baseUrl: "http://localhost:11434"
+        model: "llama3.1"
+  
+production:
+  models:
+    default: "claude"
+    providers:
+      claude:
+        apiKey: "${ANTHROPIC_API_KEY}"
+        model: "claude-sonnet-4-20250514"
